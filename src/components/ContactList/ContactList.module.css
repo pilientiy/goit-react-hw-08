@@ -1,0 +1,16 @@
+.list {
+  list-style-type: none;
+  padding: 0;
+}
+
+.listItem {
+  margin-bottom: 16px;
+  padding: 16px;
+  border-radius: 8px;
+  background-color: #f0f0f0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.listItem:hover {
+  background-color: #e0e0e0;
+}

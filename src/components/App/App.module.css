@@ -1,0 +1,14 @@
+.mainContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .headerText {
+    color: rgb(98, 98, 244);
+    margin-bottom: 40px;
+    font-size: 24px; 
+    text-align: center;
+  }

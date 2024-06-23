@@ -1,0 +1,22 @@
+.container {
+    display: flex;
+    align-items: center;
+    display: flex;
+    gap: 32px;
+  }
+  
+  .link {
+    text-decoration: none;
+    color: #ffffff; 
+    margin-right: 15px; 
+    padding: 10px; 
+    border-radius: 5px; 
+    cursor: pointer;
+    transition: background-color 0.5s;
+  }
+  
+  .link:hover {  
+    background-color: rgb(1, 104, 248);
+    color: rgb(27, 27, 28); 
+  }
+  
