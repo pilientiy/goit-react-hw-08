@@ -1,11 +1,21 @@
-import { Button } from "@mui/material";
 import { NavLink } from "react-router-dom";
+import css from "./AuthNav.module.css";
+import clsx from "clsx";
+
+const buildLinkClass = ({ isActive }) => {
+  return clsx(css.link, isActive && css.active);
+};
 
 export default function AuthNav() {
-    return (
-        <div>
-            <NavLink to='/register'><Button sx={{color: '#fff'}}>Register</Button></NavLink>
-            <NavLink to='/login'><Button sx={{ color: '#fff' }}>Log In</Button></NavLink>
-        </div>
-    )
+  return (
+    <div>
+      <NavLink className={buildLinkClass} to="/register">
+        Register
+      </NavLink>
+      <NavLink className={buildLinkClass} to="/login">
+        Log In
+      </NavLink>
+    </div>
+  );
 }
+

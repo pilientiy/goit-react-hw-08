@@ -1,59 +1,67 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-
-axios.defaults.baseURL = 'https://connections-api.herokuapp.com';
+import toast from "react-hot-toast";
 
 export const fetchContacts = createAsyncThunk(
-    'contscts/fetchAll',
-    async (_, thunkAPI) => {
-        try {
-            const respons = await axios.get('/contacts');
-            return respons.data;
-        }
-        catch (error) {
-            return thunkAPI.rejectWithValue(error.message)
-        }
+  "contacts/fetchAll",
+  async (_, thunkAPI) => {
+    try {
+      const response = await axios.get("/contacts");
+      return response.data;
+    } catch (e) {
+      return thunkAPI.rejectWithValue(e.message);
     }
+  }
 );
 
 export const addContact = createAsyncThunk(
-    'contacts/addContact',
-    async (newContacts, thunkAPI) => {
-        try {
-            
-            const respons = await axios.post('/contacts', newContacts);
-            return respons.data;
-        }
-        catch (error) {
-            return thunkAPI.rejectWithValue(error.message)
-        }
+  "contacts/addContact",
+  async ({ name, number }, thunkAPI) => {
+    try {
+      const response = await axios.post("/contacts", { name, number });
+      toast.success("Contact is added");
+      return response.data;
+    } catch (e) {
+      return thunkAPI.rejectWithValue(e.message);
     }
+  }
 );
 
-
 export const deleteContact = createAsyncThunk(
-    'contacts/deleteContact',
-    async (contactsId, thunkAPI) => {
-        try {
-            const respons = await axios.delete(`/contacts/${contactsId}`);
-            return respons.data;
-        }
-        catch (error) {
-            return thunkAPI.rejectWithValue(error.message)
-        }
+  "contacts/deleteContact",
+  async (contactId, thunkAPI) => {
+    try {
+      console.log(contactId);
+      const response = await axios.delete(`/contacts/${contactId}`);
+      toast.success("Contact is deleted");
+      return response.data;
+    } catch (e) {
+      return thunkAPI.rejectWithValue(e.message);
     }
+  }
 );
 
 export const editContact = createAsyncThunk(
-    'contacts/editContact',
-    async (editContact, thunkAPI) => {
-        try {
-            const { id, ...updateData } = editContact;
-            const respons = await axios.patch(`/contacts/${id}`, updateData);
-            return respons.data;
-        }
-        catch (error) {
-            return thunkAPI.rejectWithValue(error.message)
-        }
+  "contacts/editContact",
+  async ({ id, name, number }, thunkAPI) => {
+    try {
+      const response = await axios.patch(`/contacts/${id}`, { name, number });
+      toast.success("Contact is edited");
+      return response.data;
+    } catch (e) {
+      return thunkAPI.rejectWithValue(e.message);
     }
+  }
+);
+
+export const logOut = createAsyncThunk(
+  "auth/logOut",
+  async (_, thunkAPI) => {
+    try {
+      toast.success("Logged out successfully");
+      return true;
+    } catch (e) {
+      return thunkAPI.rejectWithValue(e.message);
+    }
+  }
 );

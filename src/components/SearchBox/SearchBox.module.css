@@ -1,7 +1,16 @@
-.input {
-  width: 280px;
-  height: 40px;
-  border: 2px solid #000;
-  margin-bottom: 32px;
-  border-radius: 8px;
-}
+.searchBox {
+    width: 100%;
+    padding: 20px 0;
+    border-radius: 4px;
+  }
+  
+  .title {
+    text-align: center;
+  }
+  
+  .searchBoxInput {
+    width: 100%;
+    padding: 10px 20px;
+    border: 1px solid black;
+    border-radius: 8px;
+  }

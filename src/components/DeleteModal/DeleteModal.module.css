@@ -1,0 +1,8 @@
+.modalTitle {
+    margin-bottom: 20px;
+  }
+  
+  .modalBtns {
+    display: flex;
+    justify-content: space-between;
+  }
