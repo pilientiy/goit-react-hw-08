@@ -1,50 +1,18 @@
-
-.listItemContainer {
+.item {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px;
-  border: 1px solid #ccc;
-  margin-bottom: 10px;
-  background-color: #fff;
+  border: 2px solid #444141;
+  border-radius: 10px;
+  padding: 16px;
+  gap: 12px;
+  font-family: "Montserrat-Bold";
+  background-color: rgb(240, 237, 243);
 }
-
-.listItemPice {
+.info {
   display: flex;
   align-items: center;
-}
-
-.contactName {
-  margin-left: 10px;
-  padding: 5px;
-  font-size: 1em;
-  border: 1px solid #ccc;
-}
-
-.buttonContainer {
-  display: flex;
-  align-items: center;
-}
-
-.buttonChange,
-.deleteButton {
-  display: flex;
-  align-items: center;
-  margin-left: 10px;
-  padding: 5px 10px;
-  font-size: 1em;
-  cursor: pointer;
-  border: none;
-  background-color: #007bff;
-  color: #fff;
-}
-
-.buttonChange:hover,
-.deleteButton:hover {
-  background-color: #0056b3;
-}
-
-.buttonChange svg,
-.deleteButton svg {
-  margin-right: 5px;
+  gap: 8px;
+  padding: 0;
+  width: 300px;
 }

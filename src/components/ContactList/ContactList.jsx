@@ -1,21 +1,18 @@
-import React from "react";
-import Contact from "../Contact/Contact";
-import style from "./ContactList.module.css";
 import { useSelector } from "react-redux";
-import { selectFilteredContacts } from "../../redux/contacts/selectors";
+import Contact from "../Contact/Contact";
+import { selectFilteredContacts } from "../../redux/contacts/selector";
+import { List, ListItem } from "@mui/material";
 
-const ContactList = () => {
-  const contacts = useSelector(selectFilteredContacts);
-
-  return (
-    <ul className={style.list}>
-      {contacts.map((contact) => (
-        <li className={style.listItem} key={contact.id}>
-          <Contact contact={contact} />
-        </li>
-      ))}
-    </ul>
-  );
-};
-
-export default ContactList;
+export default function ContactList({modalOpenDelete, modalOpenEdit}) {
+    const contacts = useSelector(selectFilteredContacts);
+  
+    return (
+        <List sx={{display:'flex',flexWrap:'wrap', justifyContent:'center'}}>
+            {contacts.map((contactItem) => (
+                <ListItem sx={{width:'356px'}} key={contactItem.id}>
+                    <Contact contact={contactItem} modalOpenDelete={modalOpenDelete} modalOpenEdit={modalOpenEdit}  />
+                </ListItem>
+            ))}
+        </List>
+    )
+}

@@ -1,59 +1,56 @@
-import { useDispatch, useSelector } from 'react-redux';
-import { useEffect } from 'react';
-import { fetchContacts } from '../../redux/contacts/operations';
-import { selectLoading } from '../../redux/contacts/selectors';
-import ContactForm from '../../components/ContactForm/ContactForm';
-import ContactList from '../../components/ContactList/ContactList';
-import Loading from '../../components/Loading/Loading';
-import DocumentTitle from '../../components/DocumentTitle/DocumentTitle';
-import SearchBox from '../../components/SearchBox/SearchBox';
-import { toast } from 'react-toastify';
-import style from './ContactsPage.module.css';
+import { Box, LinearProgress} from "@mui/material";
+import ContactForm from "../../components/ContactForm/ContactForm";
+import ContactList from "../../components/ContactList/ContactList";
+import SearchBox from '../../components/SearchBox/SearchBox'
+import { useDispatch, useSelector } from "react-redux";
+import { selectLoading } from "../../redux/contacts/selector";
+import { useEffect, useState } from "react";
+import { fetchContacts } from "../../redux/contacts/operations";
+import ModalDelete from "../../components/ModalDelete/ModalDelete";
+import ModalEdit from "../../components/ModalEdit/ModalEdit";
 
-const ContactsPage = () => {
-  const dispatch = useDispatch(); 
+export default function ContactsPage() {
+    const dispatch = useDispatch();
+    const isLoading = useSelector(selectLoading);
+    const [openDelete, setOpenDelete] = useState(false);
+    const [openEdit, setOpenEdit] = useState(false);
+    const [currentContactDelete, setCurrentContactDelete] = useState();
+    const [currentContactEdit, setCurrentContactEdit] = useState();
 
-  const isLoading = useSelector(selectLoading);
+    const handleOpenDelete = (contact) => {
+        setOpenDelete(true);
+        setCurrentContactDelete(contact);
+    }
 
-  useEffect(() => {
-    let success = true;
-    dispatch(fetchContacts())
-      .unwrap()
-      .catch(() => {
-        success = false;
-      })
-      .finally(() => {
-        if (success) {
-          showToast('Contacts loaded successfully!', 'success');
-        } else {
-          showToast('Oops, something went wrong!', 'error');
-        }
-      });
-  }, [dispatch]);
+    const handleCloseDelete = () => {
+        setOpenDelete(false);
 
-  const showToast = (message, type) => {
-    toast(message, {
-      position: 'top-right',
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: type === 'success' ? 'light' : 'colored',
-      type: type,
-    });
-  };
+    } 
+       const handleOpenEdit = (contact) => {
+        setOpenEdit(true);
+        setCurrentContactEdit(contact);
+    }
 
-  return (
-    <div className={style.container}>
-      <DocumentTitle title="Your Contacts" />
-      <ContactForm />
-      <SearchBox />
-      {isLoading && <Loading />}
-      <ContactList />
-    </div>
-  );
-};
+    const handleCloseEdit = () => {
+        setOpenEdit(false);
 
-export default ContactsPage;
+    } 
+
+
+    useEffect(() => {
+        dispatch(fetchContacts())
+    }, [dispatch])
+    
+    return (
+        <Box component='section' >
+           <Box sx={{padding:'32px', display:'flex', justifyContent:'space-between', flexWrap:'wrap', alignItems:'center', gap:'20px'}}>
+                <ContactForm />
+                <SearchBox />
+           </Box>
+            {isLoading&&<LinearProgress/>}
+            <ContactList modalOpenDelete={handleOpenDelete} modalOpenEdit={handleOpenEdit} />
+            <ModalDelete open={openDelete} close={handleCloseDelete} id={currentContactDelete} />
+            {currentContactEdit&&<ModalEdit open={openEdit} close={handleCloseEdit} id={currentContactEdit}/>}
+        </Box>
+    )
+}

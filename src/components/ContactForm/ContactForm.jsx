@@ -1,97 +1,54 @@
-import React from "react";
-import { Formik, Form, Field, ErrorMessage } from "formik";
+import { Form, Formik, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { useId } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import css from './ContactForm.module.css';
+import { useDispatch } from "react-redux";
 import { addContact } from "../../redux/contacts/operations";
-import { toast } from "react-toastify";
-import { selectUser } from "../../redux/auth/selectors";
-import style from "./ContactForm.module.css";
+import { Box, Button, Input, InputLabel, Paper } from "@mui/material";
+import toast,{ Toaster } from 'react-hot-toast';
 
-const showToast = (message, type) => {
-  toast(message, {
-    position: "top-right",
-    autoClose: 5000,
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
-    theme: type === "success" ? "light" : "colored",
-    type: type,
-  });
-};
 
-const ContactForm = () => {
-  const dispatch = useDispatch();
-  const formNameId = useId();
-  const formNumberId = useId();
-  const { name } = useSelector(selectUser);
+export default function ContactForm() {
+    const dispatch = useDispatch();
+    
+    const ContactSchema = Yup.object().shape({
+        name: Yup.string().min(3, 'To Short!').max(50, 'To Long!').required('Required!'),
+        number: Yup.string().min(3, 'To Short!').max(50, 'To Long!').required('Required!')
+    });
 
-  const contactsSchema = Yup.object().shape({
-    name: Yup.string()
-      .min(2, "Too Short!")
-      .max(30, "Too Long!")
-      .required("Required"),
-    number: Yup.string()
-      .min(9, "Too Short!")
-      .max(12, "Too Long!")
-      .required("Required"),
-  });
-
-  const handleSubmit = (values, actions) => {
-    const { name, number } = values;
-    dispatch(addContact({ name, number }))
-      .unwrap()
-      .then(() => {
-        showToast("Contact add successful!", "success");
-      })
-      .catch(() => {
-        showToast("Contact add failed!", "error");
-      });
-    actions.resetForm();
-  };
-
-  return (
-    <div className={style.container}>
-      <p className={style.welcome}>Welcome, {name}</p>
-
-      <Formik
-        className={style.contactForm}
-        validationSchema={contactsSchema}
-        onSubmit={handleSubmit}
-        initialValues={{ name: "", number: "" }}
-      >
-        <Form className={style.contactForm}>
-          <div className={style.inputContainer}>
-            <label htmlFor={formNameId}>Name</label>
-            <Field
-              className={style.nameInput}
-              id={formNameId}
-              type="text"
-              name="name"
-              placeholder="Enter your name"
-            />
-            <ErrorMessage className={style.error} name="name" component="span" />
-          </div>
-          <div className={style.inputContainer}>
-            <label htmlFor={formNumberId}>Number</label>
-            <Field
-              className={style.nameInput}
-              id={formNumberId}
-              type="tel"
-              name="number"
-              placeholder="Enter your phone number"
-            />
-            <ErrorMessage className={style.error} name="number" component="span" />
-          </div>
-          <button className={style.buttonSubmit} type="submit">
-            Add contact
-          </button>
-        </Form>
-      </Formik>
-    </div>
-  );
-};
-
-export default ContactForm;
+    const id = useId();
+  
+    const initialValues = {
+            name: "",
+            number: ""
+    }
+    function handleSubmit(values, actions) {
+        dispatch(addContact(values)).unwrap().then(()=>toast('The contact has been added successefully'));
+        actions.resetForm();
+    }
+  
+    return (
+        <>
+            <Formik initialValues={initialValues} onSubmit={handleSubmit} validationSchema={ContactSchema}>
+                <Paper elevation={3} sx={{width:'700px'}}>
+                    <Box component={Form} sx={{display: 'flex', justifyContent:'space-between', gap:1,alignItems:'center', padding:'16px',flexWrap:'wrap'}}>
+                        <InputLabel htmlFor={`${id}+name`}>Name</InputLabel>
+                        <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                            <ErrorMessage name="name" component="span" className={css.message}/>
+                            <Field as={Input} type="text" name="name" id={`${id}+name`}/>                        
+                       </Box>
+        
+                        <InputLabel htmlFor={`${id}+number`}>Number</InputLabel>
+                        <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                            <ErrorMessage name="number" component="span" className={css.message} />
+                            <Field as={Input} type="text" name="number" id={`${id}+number`} />                    
+                        </Box>
+                        
+                        <Button variant="text" className={css.button} type="submit">Add contact</Button>
+                    </Box>
+                </Paper>
+            </Formik>
+            <Toaster/>
+        </>
+    )
+}

@@ -1,73 +1,31 @@
-import { FaPhone } from "react-icons/fa6";
-import { FaUser } from "react-icons/fa";
-import style from "./Contact.module.css";
-import { useDispatch } from "react-redux";
-import { changeContact } from "../../redux/contacts/operations";
-import { Field, Form, Formik } from "formik";
-import { FaPencil } from "react-icons/fa6";
-import { MdDeleteForever } from "react-icons/md";
-import { toast } from "react-toastify";
-import { openModal } from "../../redux/modalWindow/slice";
+import { HiPhone } from "react-icons/hi";
+import { IoPerson } from "react-icons/io5";
+import { Box, Card, CardContent, IconButton, List, ListItem, Typography } from "@mui/material";
+import { DeleteSweepOutlined, EditNoteOutlined } from "@mui/icons-material";
 
 
-const showToast = (message, type) => {
-  toast(message, {
-    position: "top-right",
-    autoClose: 5000,
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
-    theme: type === "success" ? "light" : "colored",
-    type: type,
-  });
-};
+export default function Contact({ contact: {id, name, number }, modalOpenDelete, modalOpenEdit }) { 
 
-export default function Contact({ contact: { id, name, number } }) {
-  const dispatch = useDispatch();
-  const handleDelete = () => {
-    dispatch(openModal(id));
-  };
-  const handleChange = (values) => {
-    const { name, number } = values;
-    dispatch(changeContact({ id, name, number }))
-      .unwrap()
-      .then(() => {
-        showToast("Edit success!", "success");
-      })
-      .catch(() => {
-        showToast("Edit failed!", "error");
-      });
-  };
-  return (
-    <>
-      <Formik
-        initialValues={{ name: name, number: number }}
-        onSubmit={handleChange}
-      >
-        <Form className={style.listItemContainer}>
-          <label className={style.listItemPice}>
-            <FaUser /> <Field className={style.contactName} name="name" />
-          </label>
-          <label className={style.listItemPice}>
-            <FaPhone />
-            <Field className={style.contactName} name="number" />
-          </label>
-          <div className={style.buttonContainer}>
-            <button className={style.buttonChange} type="submit">
-              <FaPencil />
-              Update
-            </button>
-            <button
-              className={style.deleteButton}
-              type="button"
-              onClick={handleDelete}>
-              <MdDeleteForever size={20} /> Delete
-            </button>
-          </div>
-        </Form>
-      </Formik>
-    </>
-  );
+    return (
+        <>
+            <Card sx={{width:'356px', height:'160px'}}>
+                <CardContent sx={{display:'flex', justifyContent:'space-between', alignItems:'center'}}>
+                    <List>
+                        <ListItem sx={{display:'flex', gap:2}}>
+                            <IoPerson />
+                            <Typography variant="h6">{name}</Typography>  
+                        </ListItem>    
+                        <ListItem sx={{display:'flex', gap:2}}>
+                            <HiPhone/>
+                            <Typography variant="p">{number}</Typography>  
+                        </ListItem>
+                    </List>       
+                    <Box sx={{display:'flex', flexDirection:'column', gap:1}}>                        
+                        <IconButton variant="outlined" type="button" onClick={()=>{modalOpenEdit(id)}} ><EditNoteOutlined/></IconButton>
+                        <IconButton variant="outlined" type="button" onClick={()=>{modalOpenDelete(id)}}><DeleteSweepOutlined/></IconButton>
+                    </Box>
+                </CardContent>                     
+            </Card>
+        </>
+    )
 }

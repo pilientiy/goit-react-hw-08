@@ -1,102 +1,46 @@
-import { Formik, Form, Field, ErrorMessage } from "formik";
-import * as Yup from "yup";
-import { useId } from "react";
+import { Box, Button, Paper, TextField} from "@mui/material"
+import { ErrorMessage, Field, Form, Formik } from "formik"
 import { useDispatch } from "react-redux";
+import * as Yup from "yup";
 import { register } from "../../redux/auth/operations";
-import style from "./RegistrationForm.module.css";
-import { toast } from "react-toastify";
+import toast,{ Toaster } from 'react-hot-toast';
 
-const showToast = (message, type) => {
-  toast(message, {
-    position: "top-right",
-    autoClose: 5000,
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
-    theme: type === "success" ? "light" : "colored",
-    type: type,
-  });
-};
+export default function RegistrationForm() {
+    const dispatch = useDispatch();
 
-const RegistrationForm = () => {
-  const nameId = useId();
-  const emailId = useId();
-  const passwordId = useId();
-  const dispatch = useDispatch();
-
-  const registerSchema = Yup.object().shape({
-    name: Yup.string()
-      .min(2, "too Short!")
-      .max(20, "Too Long!")
-      .required("Required"),
-    email: Yup.string()
-      .min(5, "too Short!")
-      .max(30, "Too Long!")
-      .required("Required"),
-    password: Yup.string()
-      .min(5, "too Short!")
-      .max(30, "Too Long!")
-      .required("Required"),
-  });
-
-  const handleSubmit = async (values, actions) => {
-    try {
-      await dispatch(register(values)).unwrap();
-      showToast("Registration successful!", "success");
-      actions.resetForm();
-    } catch (error) {
-      showToast("Registration failed!", "error");
+     const ContactSchema = Yup.object().shape({
+        name: Yup.string().min(3, 'To Short!').max(50, 'To Long!').required('Required!'),
+        email: Yup.string().email('Invalid email address').required('Required!'),
+        password: Yup.string().required('Required!').min(8, 'Password must be at least 8 characters!')
+    });
+    const initialValues = {
+        name: "",
+        email: "",
+        password: "",
     }
-  };
 
-  return (
-    <Formik
-      initialValues={{ name: "", email: "", password: "" }}
-      validationSchema={registerSchema}
-      onSubmit={handleSubmit}
-    >
-      <Form className={style.form}>
-        <div className={style.container}>
-          <label htmlFor={nameId}>Name</label>
-          <Field
-            className={style.input}
-            type="text"
-            name="name"
-            id={nameId}
-            placeholder="Enter your name..."
-          />
-          <ErrorMessage className={style.errorMessage} name="name" component="p" />
-        </div>
-        <div className={style.container}>
-          <label htmlFor={emailId}>Email</label>
-          <Field
-            className={style.input}
-            type="email"
-            name="email"
-            id={emailId}
-            placeholder="Enter your email..."
-          />
-          <ErrorMessage className={style.errorMessage} name="email" component="p" />
-        </div>
-        <div className={style.container}>
-          <label htmlFor={passwordId}>Password</label>
-          <Field
-            className={style.input}
-            type="password"
-            name="password"
-            id={passwordId}
-            placeholder="Enter your password..."
-          />
-          <ErrorMessage className={style.errorMessage} name="password" component="p" />
-        </div>
-        <button className={style.buttonSub} type="submit">
-          Register
-        </button>
-      </Form>
-    </Formik>
-  );
-};
+    const handleSubmid = (values, actions) => {
+        dispatch(register(values)).unwrap().then().catch(() => toast.error('Something went wrong, try again...'));
+        actions.resetForm();
+    }
 
-export default RegistrationForm;
+    return (
+       <>
+            <Formik initialValues={initialValues} validationSchema={ContactSchema} onSubmit={handleSubmid}>
+                <Paper elevation={3} sx={{marginTop:2}}>
+                    <Box component={Form} sx={{ display: 'flex', gap: 2, padding: '32px 16px', flexDirection: 'column', width: '356px' }}>
+                        <ErrorMessage name="name"/>
+                        <Field as={TextField} name='name' lable='name' helperText='Username' />
+                        <ErrorMessage name="email"/>
+                        <Field as={TextField} name='email' lable='Email' type='email' helperText='Email' />
+                        <ErrorMessage name="password"/>
+                        <Field as={TextField} name='password' lable='Password' type='password' helperText='Password' />
+                        
+                        <Button type='submit' variant="contained" sx={{width:'142px', margin:'0 auto'}}>Register</Button>
+                    </Box>
+                </Paper>
+            </Formik>
+            <Toaster/>
+       </>
+    )
+}

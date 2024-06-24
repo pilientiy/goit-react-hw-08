@@ -1,11 +1,11 @@
-import DocumentTitle from "../../components/DocumentTitle/DocumentTitle";
+import { Box, Typography } from "@mui/material";
 import LoginForm from "../../components/LoginForm/LoginForm";
-const LoginPage = () => {
-  return (
-    <>
-      <DocumentTitle>Log In</DocumentTitle>
-      <LoginForm />
-    </>
-  );
-};
-export default LoginPage;
+
+export default function LoginPage() {
+    return (
+        <Box sx={{display:'flex', flexDirection:'column', alignItems:'center',padding:'32px'}}>
+            <Typography variant="h3">Please log in</Typography>
+            <LoginForm/>
+        </Box>
+    )
+}
